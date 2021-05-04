@@ -33,6 +33,16 @@ func GenPrimePair(size int64) (*big.Int, *big.Int) {
 		x := new(big.Int)
 		x.Mul(p, q)
 		k := int64(x.BitLen())
+
+		// pq_thres = 2*n^{1/4}
+		pq_sub := new(big.Int)
+		pq_sub.Sub(p, q)
+		pq_thres := new(big.Int)
+		pq_thres.Sqrt(x).Sqrt(pq_thres).Mul(big.NewInt(2), pq_thres)
+		if pq_thres.Cmp(pq_sub) > 0 {
+			continue
+		}
+
 		if k == size {
 			break
 		} else if k > size && !pqOrFlag {
